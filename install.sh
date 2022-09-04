@@ -11,8 +11,6 @@ distro="${2?ERROR: Please provide desire distro}"
 
 REPO_PATH=$(dirname $(realpath "${BASH_SOURCE[0]-$0}"))
 
-exit 1
-
 case "${distro}" in
 
     "leap")
