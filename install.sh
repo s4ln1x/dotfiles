@@ -9,7 +9,7 @@ email="${1?ERROR: Please provide a valid email}"
 # Choosing right installer
 distro="${2?ERROR: Please provide desire distro}"
 
-REPO_PATH=$(dirname "${BASH_SOURCE[0]-$0}")
+REPO_PATH=$(dirname $(realpath "${BASH_SOURCE[0]-$0}"))
 
 exit 1
 
