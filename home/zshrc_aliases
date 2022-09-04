@@ -1,0 +1,42 @@
+source $HOME/.zshrc_install
+
+# alias for commands
+alias reboot='sudo reboot'
+alias poweroff='sudo poweroff'
+alias dd='sudo dd'
+alias umount='sudo umount'
+alias tree='tree -C'
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias ssh='ssh -Y'
+alias vim='vim -p'
+alias nvim='nvim -p'
+[[ "${DISTRO}" == "arch" ]] && alias rm='trash'
+alias htop='TERM=xterm-color htop'
+
+# alias for package managers
+alias pacman='sudo pacman'
+alias pacman-autoremove='pacman -Rsn $(pacman -Qdtq)'
+alias zypper='sudo zypper'
+alias dnf='sudo dnf'
+alias flatpak='sudo flatpak'
+alias apt='sudo apt'
+alias debian-update='apt update && apt upgrade'
+alias npm='sudo npm'
+alias rpmconf='sudo rpmconf'
+alias systemctl='sudo systemctl'
+alias dnfup=dnf_up
+
+# dnf best upgrade every
+function dnf_up() {
+    dnf -y upgrade
+    dnf -y distro-sync
+    dnf -y autoremove
+    flatpak -y upgrade
+    flatpak repair
+    rpmconf -a
+    dnf needs-restarting -r || systemctl reboot
+}
+
+# alias for docker
+alias drunk="docker run --rm -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=:0 --ipc=host -v /etc/localtime:/etc/localtime:ro -v ${HOME}/.ssh:/home/dev/.ssh -v ${HOME}/.qnx:/home/dev/.qnx -v ${HOME}/.gitconfig:/home/dev/.gitconfig --cap-add=NET_ADMIN --net=host --group-add sudo --group-add dev --device /dev/net/tun -w /home/dev/host_workspace"

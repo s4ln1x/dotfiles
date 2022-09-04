@@ -1,0 +1,25 @@
+#=============================================================================#
+#[ Rust ]=====================================================================#
+#=============================================================================#
+export PATH="$PATH":/sbin:/usr/sbin:/usr/local/sbin:/usr/local/bin:"$HOME""/.local/bin"
+export PATH="$PATH":""$HOME"/.cargo/bin"
+export PATH="$PATH":"$HOME/go/bin"
+
+
+#=============================================================================#
+#[ JetBrains ]================================================================#
+#=============================================================================#
+export PATH="${PATH}:${HOME}/bin"
+
+#=============================================================================#
+#[ Miscellaneous ]============================================================#
+#=============================================================================#
+export EDITOR='vim'
+export FZF_PREVIEW_LINES=500
+export LINES=500
+export DOCKER_WORKSPACE="${HOME}/ws/docker"
+export EBLINUX_WORKSPACE="${HOME}/ws/eblinux"
+export QNX_WORKSPACE="${HOME}/ws/qnx"
+export YOCTO_WORKSPACE="${HOME}/ws/yocto"
+export COMPONENT_WORKSPACE="${HOME}/ws/swc"
+
