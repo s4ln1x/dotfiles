@@ -39,4 +39,4 @@ function dnf_up() {
 }
 
 # alias for docker
-alias drunk="docker run --rm -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=:0 --ipc=host -v /etc/localtime:/etc/localtime:ro -v ${HOME}/.ssh:/home/dev/.ssh -v ${HOME}/.qnx:/home/dev/.qnx -v ${HOME}/.gitconfig:/home/dev/.gitconfig --cap-add=NET_ADMIN --net=host --group-add sudo --group-add dev --device /dev/net/tun -w /home/dev/host_workspace"
+alias drunk="docker run --rm -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=:0 --ipc=host -v /etc/localtime:/etc/localtime:ro -v ${HOME}/.ssh:/home/dev/.ssh -v ${HOME}/.qnx:${HOME}/.qnx -v ${HOME}/.gitconfig:${HOME}/.gitconfig --cap-add=NET_ADMIN --net=host --group-add sudo --group-add dev --device /dev/net/tun -w ${HOME}/host_workspace"
