@@ -40,4 +40,5 @@ crontabs \
 rpmconf \
 gnome-extensions-app \
 gnome-shell-extension-appindicator \
-vim
+vim \
+steam
