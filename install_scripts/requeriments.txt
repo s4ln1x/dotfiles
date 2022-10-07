@@ -1,8 +1,0 @@
-flake8
-jedi
-pylint
-flask
-django
-neovim
-matplotlib
-virtualenv

@@ -41,4 +41,5 @@ rpmconf \
 gnome-extensions-app \
 gnome-shell-extension-appindicator \
 vim \
-steam
+steam \
+rust

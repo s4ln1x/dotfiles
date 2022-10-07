@@ -54,5 +54,16 @@ ntfs-3g
 # Enable bluetooth
 sudo systemctl start bluetooth
 sudo systemctl enable bluetooth
-sudo usermod -aG wheel $USER
-sudo gpasswd -a $USER wheel
+sudo usermod -aG wheel "${USER}"
+sudo gpasswd -a "${USER}" wheel
+
+echo '
+     polkit.addRule(function(action, subject) {
+         if ((action.id == "org.blueman.rfkill.setstate" ||
+              action.id == "org.blueman.network.setup") &&
+              subject.local && subject.active && subject.isInGroup("wheel")) {
+
+             return polkit.Result.YES;
+         }
+     });
+     ' | sudo tee /etc/polkit-1/rules.d/81-blueman.rules > /dev/null
