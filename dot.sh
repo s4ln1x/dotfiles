@@ -55,8 +55,7 @@ done
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # Install Hack Nerd Font
-# shellcheck disable=SC2164
-mkdir -p ~/.local/share/fonts && pushd ~/.local/share/fonts && curl -fLo 'Hack Regular Nerd Font Complete.ttf' https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Hack/Regular/complete/Hack%20Regular%20Nerd%20Font%20Complete.ttf && popd
+mkdir -p ~/.local/share/fonts && curl -fLo ~/.local/share/fonts/'Hack Regular Nerd Font Complete.ttf' https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Hack/Regular/complete/Hack%20Regular%20Nerd%20Font%20Complete.ttf
 fc-cache -f
 
 # Install jetbrains fonts
