@@ -42,4 +42,5 @@ gnome-extensions-app \
 gnome-shell-extension-appindicator \
 vim \
 steam \
-rust
+rust \
+cargo
