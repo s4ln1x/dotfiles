@@ -45,4 +45,5 @@ steam \
 rust \
 cargo \
 fedora-packager \
-fedora-review
+fedora-review \
+inotify-tools
