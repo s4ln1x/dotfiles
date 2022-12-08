@@ -31,4 +31,5 @@ lynis \
 dconf-editor \
 meld \
 tree \
-node-typescript
+node-typescript \
+wordnet

@@ -46,4 +46,5 @@ rust \
 cargo \
 fedora-packager \
 fedora-review \
-inotify-tools
+inotify-tools \
+wordnet
