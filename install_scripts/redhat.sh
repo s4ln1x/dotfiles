@@ -12,20 +12,26 @@ sudo dnf groupupdate -y multimedia --setop="install_weak_deps=False" --exclude=P
 sudo dnf groupupdate -y sound-and-video
 
 sudo dnf install -y @Multimedia \
-dconf-editor \
-gnome-tweaks \
-thermald \
-nodejs \
-npm \
-zsh \
-util-linux-user \
-virt-manager \
-libvirt \
-golang \
-cockpit \
-cockpit-machines \
-cockpit-podman \
-cockpit-session-recording \
-vlc \
-rpmconf \
-htop
+    dconf-editor \
+    gnome-tweaks \
+    thermald \
+    nodejs \
+    npm \
+    zsh \
+    util-linux-user \
+    virt-manager \
+    libvirt \
+    golang \
+    cockpit \
+    cockpit-machines \
+    cockpit-podman \
+    cockpit-session-recording \
+    vlc \
+    rpmconf \
+    htop
+
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+sudo flatpak install -y com.valvesoftware.Steam \
+    com.todoist.Todoist \
+    com.spotify.Client
