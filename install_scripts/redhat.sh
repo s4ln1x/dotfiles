@@ -33,10 +33,6 @@ sudo dnf install -y @Multimedia \
     vlc \
     zsh
 
-# Add flatpak
-sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-sudo flatpak install -y com.todoist.Todoist \
-    com.spotify.Client
-
+# Install xpad kernel driver for xbox wireless controllers
 sudo git clone https://github.com/paroj/xpad.git /usr/src/xpad-0.4 && cd /usr/src/xpad-0.4 || exit 1
 sudo dkms install -m xpad -v 0.4

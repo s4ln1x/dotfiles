@@ -17,7 +17,6 @@ alias pacman='sudo pacman'
 alias pacman-autoremove='pacman -Rsn $(pacman -Qdtq)'
 alias zypper='sudo zypper'
 alias dnf='sudo dnf'
-alias flatpak='sudo flatpak'
 alias apt='sudo apt'
 alias debian-update='apt update && apt upgrade'
 alias npm='sudo npm'
@@ -30,8 +29,6 @@ function dnf_up() {
     dnf -y upgrade
     dnf -y distro-sync
     dnf -y autoremove
-    flatpak -y upgrade
-    flatpak repair
     rpmconf -a
     dnf needs-restarting -r || systemctl reboot
 }
