@@ -54,13 +54,6 @@ done
 # Install vim-plug for vim
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-# Install Hack Nerd Font
-mkdir -p ~/.local/share/fonts && curl -fLo ~/.local/share/fonts/'Hack Regular Nerd Font Complete.ttf' https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Hack/Regular/complete/Hack%20Regular%20Nerd%20Font%20Complete.ttf
-fc-cache -f
-
-# Install jetbrains fonts
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh)"
-
 # Install 'Oh my zsh'
 OH_MY_ZSH_HOME="${HOME}"/.oh-my-zsh
 rm -rf "${OH_MY_ZSH_HOME}"
