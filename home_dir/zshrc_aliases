@@ -1,8 +1,4 @@
 # alias for commands
-alias reboot='sudo reboot'
-alias poweroff='sudo poweroff'
-alias dd='sudo dd'
-alias umount='sudo umount'
 alias tree='tree -C'
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
@@ -13,24 +9,16 @@ alias nvim='nvim -p'
 alias htop='TERM=xterm-color htop'
 
 # alias for package managers
-alias pacman='sudo pacman'
 alias pacman-autoremove='pacman -Rsn $(pacman -Qdtq)'
-alias zypper='sudo zypper'
-alias dnf='sudo dnf'
-alias apt='sudo apt'
-alias debian-update='apt update && apt upgrade'
-alias npm='sudo npm'
-alias rpmconf='sudo rpmconf'
-alias systemctl='sudo systemctl'
 alias dnfup=dnf_up
 
 # dnf best upgrade every
 function dnf_up() {
-    dnf -y upgrade
-    dnf -y distro-sync
-    dnf -y autoremove
-    rpmconf -a
-    dnf needs-restarting -r || systemctl reboot
+    sudo dnf -y upgrade
+    sudo dnf -y distro-sync
+    sudo dnf -y autoremove
+    sudo rpmconf -a
+    sudo dnf needs-restarting -r || systemctl reboot
 }
 
 # alias for docker
