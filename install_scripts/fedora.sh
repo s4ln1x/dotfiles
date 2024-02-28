@@ -10,7 +10,6 @@ sudo dnf install -y \
 @development-tools \
 @virtualization \
 ShellCheck \
-adobe-source* \
 cargo \
 cockpit \
 cockpit-machines \
@@ -28,7 +27,6 @@ gnome-shell-extension-appindicator \
 gnome-shell-extension-pomodoro \
 gnome-tweaks \
 golang \
-google-noto-sans* \
 htop \
 inotify-tools \
 jetbrains-mono-fonts-all \
