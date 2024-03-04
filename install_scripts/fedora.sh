@@ -22,6 +22,7 @@ fedora-packager \
 fedora-review \
 fira-code-fonts \
 firefox \
+gcc-c++ \
 gnome-extensions-app \
 gnome-shell-extension-appindicator \
 gnome-shell-extension-pomodoro \
