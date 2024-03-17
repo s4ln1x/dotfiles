@@ -18,7 +18,8 @@ function dnf_up() {
     sudo dnf -y distro-sync
     sudo dnf -y autoremove
     sudo rpmconf -a
-    sudo dnf needs-restarting -r || systemctl reboot
+    sudo dnf needs-restarting -r
+    sudo systemctl poweroff
 }
 
 # alias for docker
