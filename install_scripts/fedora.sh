@@ -10,6 +10,7 @@ sudo dnf install -y \
 @development-tools \
 @virtualization \
 ShellCheck \
+akmod-nvidia \
 cargo \
 cockpit \
 cockpit-machines \
@@ -23,6 +24,7 @@ fedora-review \
 fira-code-fonts \
 firefox \
 gcc-c++ \
+gimp \
 gnome-extensions-app \
 gnome-shell-extension-appindicator \
 gnome-shell-extension-pomodoro \
@@ -37,6 +39,8 @@ meld \
 neofetch \
 nodejs \
 npm \
+nvidia-gpu-firmware \
+openssh \
 peek \
 powerline-fonts \
 rpmconf \
@@ -51,5 +55,6 @@ vim \
 virt-manager \
 wordnet \
 xclip \
+xorg-x11-drv-nvidia-cuda \
 xsel \
 zsh
