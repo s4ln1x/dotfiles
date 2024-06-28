@@ -48,6 +48,7 @@ rust \
 steam \
 telegram-desktop \
 thermald \
+tmux \
 trash-cli \
 util-linux-user \
 vgrep \
