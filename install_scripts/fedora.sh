@@ -54,6 +54,7 @@ util-linux-user \
 vgrep \
 vim \
 virt-manager \
+wimlib-utils \
 wordnet \
 xclip \
 xorg-x11-drv-nvidia-cuda \
