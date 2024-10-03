@@ -32,5 +32,12 @@ export PATH="${PATH}:${HOME}/bin"
 export EDITOR='vim'
 export FZF_PREVIEW_LINES=500
 export LINES=500
-export X_WORKSPACE="${HOME}/ws"
+
+
+#=============================================================================#
+#[ WORK variables ]===========================================================#
+#=============================================================================#
+
+source ${HOME}/.zshrc_work_variables
+
 

@@ -28,13 +28,13 @@ let g:airline_powerline_fonts = 1
 "[ Default Values ]==========================================================================================="
 "============================================================================================================="
 
-"Enable number column on the right
+"Enable number column on the right"
 set number
 
-"Set minimum number width for number column
+"Set minimum number width for number column"
 set numberwidth=5
 
-"Enable relative column number depending on the row the cursor is
+"Enable relative column number depending on the row the cursor is"
 set relativenumber
 
 "Enable cursor line
