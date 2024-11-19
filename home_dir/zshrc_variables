@@ -38,6 +38,8 @@ export LINES=500
 #[ WORK variables ]===========================================================#
 #=============================================================================#
 
-source ${HOME}/.zshrc_work_variables
+if [ -f ${HOME}/.zshrc_work_variables ]; then
+    source ${HOME}/.zshrc_work_variables
+fi
 
 
