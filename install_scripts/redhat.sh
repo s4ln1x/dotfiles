@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Install third party repositories EPEL, RPMFusion and Negativo17
+# Install third party repositories EPEL and RPMFusion
 sudo dnf install -y --nogpgcheck https://dl.fedoraproject.org/pub/epel/epel-release-latest-"$(rpm -E %rhel)".noarch.rpm
 sudo dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-"$(rpm -E %rhel)".noarch.rpm https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-"$(rpm -E %rhel)".noarch.rpm
 sudo subscription-manager repos --enable "codeready-builder-for-rhel-9-$(uname -m)-rpms"
@@ -17,8 +17,9 @@ sudo dnf install -y @Multimedia \
     cockpit-podman \
     cockpit-session-recording \
     dconf-editor \
-    gnome-tweaks \
+    gnome-tweaks
     golang \
+    google-noto-sans-fonts \
     htop \
     libvirt \
     nodejs \
