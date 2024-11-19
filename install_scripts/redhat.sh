@@ -3,8 +3,7 @@
 # Install third party repositories EPEL, RPMFusion and Negativo17
 sudo dnf install -y --nogpgcheck https://dl.fedoraproject.org/pub/epel/epel-release-latest-"$(rpm -E %rhel)".noarch.rpm
 sudo dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-"$(rpm -E %rhel)".noarch.rpm https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-"$(rpm -E %rhel)".noarch.rpm
-sudo subscription-manager repos --enable "codeready-builder-for-rhel-8-$(uname -m)-rpms"
-sudo dnf config-manager --add-repo="https://negativo17.org/repos/epel-steam.repo"
+sudo subscription-manager repos --enable "codeready-builder-for-rhel-9-$(uname -m)-rpms"
 
 # Update system
 sudo dnf groupupdate -y core
@@ -33,6 +32,3 @@ sudo dnf install -y @Multimedia \
     vlc \
     zsh
 
-# Install xpad kernel driver for xbox wireless controllers
-sudo git clone https://github.com/paroj/xpad.git /usr/src/xpad-0.4 && cd /usr/src/xpad-0.4 || exit 1
-sudo dkms install -m xpad -v 0.4
