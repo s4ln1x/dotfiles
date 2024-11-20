@@ -18,7 +18,7 @@ function dnf_up() {
     sudo dnf -y distro-sync
     sudo dnf -y autoremove
     sudo rpmconf -a
-    sudo dnf needs-restarting -r
+    sudo flatpak -y
     sudo systemctl poweroff
 }
 
