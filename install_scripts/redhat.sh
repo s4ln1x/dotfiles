@@ -24,6 +24,7 @@ sudo dnf install -y @Multimedia \
     libvirt \
     nodejs \
     npm \
+    python3-pip \
     rpmconf \
     simple-scan \
     steam \
@@ -32,4 +33,3 @@ sudo dnf install -y @Multimedia \
     virt-manager \
     vlc \
     zsh
-
