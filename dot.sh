@@ -13,11 +13,11 @@ DOTFILES_PATH=$(dirname "$(realpath "${BASH_SOURCE[0]-$0}")")
 #[ Install Packages ]=========================================================#
 #=============================================================================#
 
-if [ -f install_scripts/"${DISTRO_INSTALLER}".sh ]; then
-  install_scripts/"${DISTRO_INSTALLER}".sh
+if [ -f scripts/"${DISTRO_INSTALLER}".sh ]; then
+  scripts/"${DISTRO_INSTALLER}".sh
 else
   echo "No '${DISTRO_INSTALLER}' installer was found, please check the following available installers:"
-  ls -1 install_scripts
+  ls -1 scripts
   exit 1
 fi
 
