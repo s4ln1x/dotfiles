@@ -1,6 +1,6 @@
-"============================================================================================================="
-"[ Plugins Installation ]====================================================================================="
-"============================================================================================================="
+"=============================================================================="
+"[ Plugins Installation ]======================================================"
+"=============================================================================="
 
 " Initial part of vim-plug
 call plug#begin()
@@ -11,22 +11,23 @@ Plug 'vim-airline/vim-airline'
 " Get themes for vim
 Plug 'morhetz/gruvbox'
 
-" It shows which lines have been added, modified, or removed for git repositories
+" It shows which lines have been added, modified, or removed for git
+" repositories
 Plug 'airblade/vim-gitgutter'
 
 " Initialize plugin system
 call plug#end()
 
-"============================================================================================================="
-"[ Vim airline ]=============================================================================================="
-"============================================================================================================="
+"=============================================================================="
+"[ Vim airline ]==============================================================="
+"=============================================================================="
 
 " Enable vim-airline to use the powerline-fonts
 let g:airline_powerline_fonts = 1
 
-"============================================================================================================="
-"[ Default Values ]==========================================================================================="
-"============================================================================================================="
+"=============================================================================="
+"[ Default Values ]============================================================"
+"=============================================================================="
 
 "Enable number column on the right"
 set number
@@ -46,12 +47,8 @@ syntax enable
 "Enable spelling check for English
 set spell spelllang=en_us
 
-"Enable autoreload of files after a file is edited
-set autoread
-
 "Set text width limit on markdown files and highlight the next column
-autocmd BufRead,BufNewFile * setlocal textwidth=111
-autocmd BufRead,BufNewFile * setlocal colorcolumn=+1
+autocmd BufRead,BufNewFile * setlocal textwidth=80 colorcolumn=+1
 
 "Fallback for highlighting on gruvbox
 let g:gruvbox_guisp_fallback = "bg"
@@ -60,7 +57,7 @@ let g:gruvbox_guisp_fallback = "bg"
 colorscheme gruvbox
 
 "Theme background to dark
-set background=dark
+set background=light
 
 "Horizontal split to open below
 set splitbelow
@@ -97,3 +94,6 @@ set clipboard^=unnamed,unnamedplus
 if has("gui_running")
   set guifont=JetBrains\ Mono\ 10
 endif
+
+" Remove trailing whitespace only on current line when leaving insert mode
+autocmd InsertLeave * s/\s\+$//e
