@@ -53,10 +53,13 @@ autocmd BufRead,BufNewFile * setlocal textwidth=80 colorcolumn=+1
 "Fallback for highlighting on gruvbox
 let g:gruvbox_guisp_fallback = "bg"
 
+" Add Terminal color support
+set termguicolors
+
 "Set color scheme
 colorscheme gruvbox
 
-"Theme background to dark
+"Theme background to dark or light
 set background=light
 
 "Horizontal split to open below

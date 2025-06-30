@@ -40,6 +40,7 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
 })
 
 -- Gruvbox config
+vim.opt.termguicolors = true
 vim.g.gruvbox_guisp_fallback = "bg"
 vim.cmd("colorscheme gruvbox")
 vim.opt.background = "light"
