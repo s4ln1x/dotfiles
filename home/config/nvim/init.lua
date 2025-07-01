@@ -30,14 +30,8 @@ vim.cmd("syntax enable")
 vim.opt.spell = true
 vim.opt.spelllang = "en_us"
 
--- Text width and color column
-vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-  pattern = "*",
-  callback = function()
-    vim.opt_local.textwidth = 80
-    vim.opt_local.colorcolumn = "+1"
-  end,
-})
+-- Set color column to 80
+vim.opt_local.colorcolumn = "80"
 
 -- Gruvbox config
 vim.opt.termguicolors = true
