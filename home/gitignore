@@ -5,3 +5,6 @@
 # Jetbrains IDEs
 .idea
 *.iml
+
+# Vim text editor
+*.swp
