@@ -41,7 +41,7 @@ git config --global init.defaultBranch main
 #[ Update Configuration Files ]===============================================#
 #=============================================================================#
 
-for configuration_file in home_dir/*; do
+for configuration_file in home/*; do
   if [ -f "${configuration_file}" ]; then
     ln -sf "${DOTFILES_PATH}/${configuration_file}" "${HOME}"/."${configuration_file##*/}"
   fi
