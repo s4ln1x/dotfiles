@@ -8,3 +8,6 @@
 
 # Vim text editor
 *.swp
+
+# OCA
+.oca
