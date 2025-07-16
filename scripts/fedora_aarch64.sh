@@ -43,6 +43,7 @@ peek \
 powerline-fonts \
 rpmconf \
 rust \
+srace \
 telegram-desktop \
 tmux \
 trash-cli \
