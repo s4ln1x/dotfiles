@@ -56,3 +56,12 @@ xclip \
 xorg-x11-drv-nvidia-cuda \
 xsel \
 zsh
+
+# Enable video
+sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing
+sudo dnf install -y \
+    gstreamer1-plugins-{base,good,bad-free,ugly} \
+    gstreamer1-plugin-openh264 \
+    libavcodec-freeworld \
+    vlc \
+    mpv
