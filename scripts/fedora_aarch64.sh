@@ -21,6 +21,8 @@ dconf-editor \
 fd-find \
 fedora-packager \
 fedora-review \
+fex-emu \
+fex-emu-rootfs-fedora \
 fira-code-fonts \
 firefox \
 gcc-c++ \
@@ -36,6 +38,7 @@ jetbrains-mono-fonts-all \
 libvirt \
 lynis \
 meld \
+muvm \
 nodejs \
 npm \
 nvidia-gpu-firmware \
@@ -58,6 +61,7 @@ xclip \
 xorg-x11-drv-nvidia-cuda \
 xsel \
 zsh
+
 
 # Enable video
 sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing
