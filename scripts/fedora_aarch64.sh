@@ -7,6 +7,7 @@ sudo dnf install -y \
 
 sudo dnf install -y \
 @development-tools \
+@x86-emulation \
 @virtualization \
 ShellCheck \
 akmod-nvidia \
@@ -43,7 +44,7 @@ peek \
 powerline-fonts \
 rpmconf \
 rust \
-srace \
+strace \
 telegram-desktop \
 tmux \
 trash-cli \
