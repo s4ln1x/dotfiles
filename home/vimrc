@@ -8,9 +8,6 @@ call plug#begin()
 " Plugin for the status line bar
 Plug 'vim-airline/vim-airline'
 
-" Get themes for vim
-Plug 'morhetz/gruvbox'
-
 " It shows which lines have been added, modified, or removed for git
 " repositories
 Plug 'airblade/vim-gitgutter'
@@ -24,12 +21,6 @@ call plug#end()
 
 " Enable vim-airline to use the powerline-fonts
 let g:airline_powerline_fonts = 1
-
-"============================================================================="
-"[ Gruvbox ]=================================================================="
-"============================================================================="
-
-let g:gruvbox_contrast_light = 'hard'
 
 "============================================================================="
 "[ Default Values ]==========================================================="
@@ -56,17 +47,14 @@ set spell spelllang=en_us
 " Highlight column 80
 set colorcolumn=80
 
-"Fallback for highlighting on gruvbox
-let g:gruvbox_guisp_fallback = "bg"
-
 " Add Terminal color support
 set termguicolors
 
 "Set color scheme
-colorscheme gruvbox
+colorscheme habamax
 
 "Theme background to dark or light
-set background=light
+set background=dark
 
 "Horizontal split to open below
 set splitbelow
