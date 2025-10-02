@@ -33,6 +33,7 @@ git config --global commit.template "${HOME}/.gitmessage"
 git config --global core.editor "vim"
 git config --global alias.poh "push origin HEAD"
 git config --global alias.l "!clear && git log --color --graph --pretty=format:'%Cred%H%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -25"
+git config --global alias.full '!git fetch && git reset --hard @{u}'
 git config --global core.pager ''
 git config --global core.excludesfile "${HOME}/.gitignore"
 git config --global init.defaultBranch main
