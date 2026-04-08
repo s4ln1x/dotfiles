@@ -48,6 +48,8 @@ git config --global alias.full '!git fetch && git reset --hard @{u}'
 for configuration_file in "${DOTFILES_PATH}"/home/*; do
   if [[ -f "${configuration_file}" ]]; then
     ln -sf "${configuration_file}" "${HOME}/.${configuration_file##*/}"
+  else
+    echo "SKIP: ${configuration_file} is not a regular file (directories are not handled yet)"
   fi
 done
 
@@ -58,7 +60,7 @@ done
 # Vim auto-loads anything under ~/.vim/pack/*/start/ — no plugin manager needed.
 # On most Linux distros the vim-airline and vim-gitgutter packages are available
 # and install to /usr/share/vim/vimfiles/, which is even cleaner. If your distro
-# installer already handled those, this section is a harmless no-op.
+# installer already handled those, we skip the clone.
 
 VIM_PACK_DIR="${HOME}/.vim/pack/plugins/start"
 mkdir -p "${VIM_PACK_DIR}"
@@ -72,23 +74,59 @@ _clone_vim_plugin() {
   fi
 }
 
-# Only clone if the plugin isn't already available via system package
-if ! vim -es -c 'echo globpath(&rtp, "plugin/airline.vim")' -c 'q' 2>/dev/null | grep -q airline; then
+# Check the filesystem directly — `vim -es` silent-ex mode swallows :echo
+# output on most builds, so grepping that is unreliable.
+_system_has_vim_plugin() {
+  local plugin_file="$1"
+  local candidates=(
+    "/usr/share/vim/vimfiles/plugin/${plugin_file}"
+    "/usr/share/vim-airline/plugin/${plugin_file}"
+    "/usr/share/vim-gitgutter/plugin/${plugin_file}"
+  )
+  for candidate in "${candidates[@]}"; do
+    [[ -f "${candidate}" ]] && return 0
+  done
+  return 1
+}
+
+if ! _system_has_vim_plugin "airline.vim"; then
   _clone_vim_plugin "vim-airline/vim-airline"
 fi
-if ! vim -es -c 'echo globpath(&rtp, "plugin/gitgutter.vim")' -c 'q' 2>/dev/null | grep -q gitgutter; then
+if ! _system_has_vim_plugin "gitgutter.vim"; then
   _clone_vim_plugin "airblade/vim-gitgutter"
 fi
 
-unset -f _clone_vim_plugin
+unset -f _clone_vim_plugin _system_has_vim_plugin
 
 #=============================================================================#
 #[ Linux-only tweaks ]========================================================#
 #=============================================================================#
 
+# Masking sleep targets is desktop-only behavior — doing it on a laptop means
+# closing the lid no longer suspends, battery drains in your bag, and thermal
+# throttling kicks in. Opt in explicitly with DOTFILES_DISABLE_SLEEP=1, or let
+# the script detect a desktop chassis via hostnamectl.
 if [[ "$(uname -s)" == "Linux" ]]; then
-  # Disable suspend and hibernation
-  sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+  _is_desktop_chassis() {
+    command -v hostnamectl &>/dev/null || return 1
+    local chassis
+    chassis=$(hostnamectl --json=short 2>/dev/null | grep -o '"Chassis":"[^"]*"' | cut -d'"' -f4)
+    [[ -z "${chassis}" ]] && chassis=$(hostnamectl 2>/dev/null | awk -F': ' '/Chassis/ {print $2}')
+    case "${chassis}" in
+      desktop|server|tower) return 0 ;;
+      *) return 1 ;;
+    esac
+  }
+
+  if [[ "${DOTFILES_DISABLE_SLEEP:-0}" == "1" ]] || _is_desktop_chassis; then
+    echo "Masking sleep/suspend/hibernate targets (desktop or forced)"
+    sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+  else
+    echo "Skipping sleep-target masking (laptop or unknown chassis)"
+    echo "  Force with: DOTFILES_DISABLE_SLEEP=1 ./dot.sh ..."
+  fi
+
+  unset -f _is_desktop_chassis
 fi
 
 #=============================================================================#
@@ -101,5 +139,7 @@ if command -v zsh &>/dev/null; then
   if ! grep -qx "${ZSH_PATH}" /etc/shells 2>/dev/null; then
     echo "${ZSH_PATH}" | sudo tee -a /etc/shells >/dev/null
   fi
-  chsh -s "${ZSH_PATH}" "${USER}"
+  # `chsh -s <shell>` (no username) changes the *current* user's shell without
+  # needing root. Passing a username requires root on several distros.
+  chsh -s "${ZSH_PATH}"
 fi

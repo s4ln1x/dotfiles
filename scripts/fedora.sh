@@ -11,13 +11,12 @@ sudo dnf install -y \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-"$(rpm -E %fedora)".noarch.rpm
 
 # =============================================================================
-# Common packages (both architectures)
+# Common packages (both architectures, any GPU)
 # =============================================================================
 sudo dnf install -y \
     @development-tools \
     @virtualization \
     ShellCheck \
-    akmod-nvidia \
     bat \
     cargo \
     cockpit \
@@ -48,7 +47,6 @@ sudo dnf install -y \
     libvirt \
     lynis \
     meld \
-    nvidia-gpu-firmware \
     openssh \
     peek \
     podman \
@@ -66,12 +64,26 @@ sudo dnf install -y \
     wimlib-utils \
     wordnet \
     xclip \
-    xorg-x11-drv-nvidia-cuda \
     xsel \
     zoxide \
     zsh \
     zsh-autosuggestions \
     zsh-syntax-highlighting
+
+# =============================================================================
+# NVIDIA stack — only if an NVIDIA GPU is actually present
+# =============================================================================
+# Installing akmod-nvidia on a non-NVIDIA machine pulls in kernel modules that
+# try to build against an absent GPU and can wedge graphics. Detect first.
+if command -v lspci &>/dev/null && lspci | grep -qi 'VGA.*NVIDIA\|3D.*NVIDIA'; then
+  echo "NVIDIA GPU detected — installing proprietary driver stack"
+  sudo dnf install -y \
+      akmod-nvidia \
+      nvidia-gpu-firmware \
+      xorg-x11-drv-nvidia-cuda
+else
+  echo "No NVIDIA GPU detected — skipping akmod-nvidia and friends"
+fi
 
 # =============================================================================
 # Architecture-specific packages

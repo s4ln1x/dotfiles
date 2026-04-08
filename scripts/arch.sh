@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Refresh package databases. `-Syy` forces a full refresh even if the DBs
+# look up-to-date. (The old `-Ssy` was a no-op that searched for a package
+# literally named "y".)
+sudo pacman -Syy
+
 # Install favorite packages
-sudo pacman -Ssy
 sudo pacman -S --noconfirm --needed \
     alsa-utils \
     bat \
@@ -63,8 +67,9 @@ sudo pacman -S --noconfirm --needed \
 # Enable bluetooth
 sudo systemctl start bluetooth
 sudo systemctl enable bluetooth
+
+# Add current user to the wheel group for sudo access
 sudo usermod -aG wheel "${USER}"
-sudo gpasswd -a "${USER}" wheel
 
 echo '
      polkit.addRule(function(action, subject) {

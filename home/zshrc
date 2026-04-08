@@ -36,7 +36,8 @@ HISTFILE=~/.zsh_history
 HISTSIZE=1000000
 SAVEHIST=1000000
 setopt SHARE_HISTORY         # share history across sessions
-setopt HIST_IGNORE_ALL_DUPS  # drop older duplicate when a new one is added
+setopt HIST_IGNORE_DUPS      # drop consecutive duplicates only (safer with SHARE_HISTORY)
+setopt HIST_EXPIRE_DUPS_FIRST # when trimming, drop dupes before uniques
 setopt HIST_REDUCE_BLANKS    # trim extra whitespace
 setopt HIST_VERIFY           # show !! expansions before running
 setopt EXTENDED_HISTORY      # timestamp each entry
@@ -120,8 +121,51 @@ if command -v fzf &>/dev/null; then
     export FZF_CTRL_T_COMMAND='fdfind --type f --hidden --exclude .git'
     export FZF_ALT_C_COMMAND='fdfind --type d --hidden --exclude .git'
   fi
-  source <(fzf --zsh)
+
+  # `fzf --zsh` needs fzf 0.48+ (Feb 2024). Older distros (Debian stable,
+  # RHEL 9, Oracle Linux, Leap) ship older fzf — fall back to sourcing the
+  # key-bindings and completion files directly from whatever path the distro
+  # uses.
+  if fzf --zsh &>/dev/null; then
+    source <(fzf --zsh)
+  else
+    for _fzf_file in \
+      /usr/share/fzf/shell/key-bindings.zsh \
+      /usr/share/doc/fzf/examples/key-bindings.zsh \
+      /usr/share/fzf/key-bindings.zsh \
+      /opt/homebrew/opt/fzf/shell/key-bindings.zsh \
+      /usr/local/opt/fzf/shell/key-bindings.zsh; do
+      [[ -f "$_fzf_file" ]] && source "$_fzf_file" && break
+    done
+    for _fzf_file in \
+      /usr/share/fzf/shell/completion.zsh \
+      /usr/share/doc/fzf/examples/completion.zsh \
+      /usr/share/fzf/completion.zsh \
+      /opt/homebrew/opt/fzf/shell/completion.zsh \
+      /usr/local/opt/fzf/shell/completion.zsh; do
+      [[ -f "$_fzf_file" ]] && source "$_fzf_file" && break
+    done
+    unset _fzf_file
+  fi
 fi
+
+# =============================================================================
+# Functions (defined before the aliases that reference them)
+# =============================================================================
+
+# Upgrade a Fedora/RHEL system fully. Does NOT power off — add `&& sudo
+# systemctl poweroff` at the call site if you want that, or run `dnfup-shutdown`.
+dnf_up() {
+  sudo dnf -y upgrade
+  sudo dnf -y distro-sync
+  sudo dnf -y autoremove
+  command -v rpmconf &>/dev/null && sudo rpmconf -a
+  command -v flatpak &>/dev/null && flatpak update -y
+}
+
+dnf_up_shutdown() {
+  dnf_up && sudo systemctl poweroff
+}
 
 # =============================================================================
 # Aliases — general
@@ -153,14 +197,7 @@ elif [[ "$OS" == "linux" ]]; then
   # Package-manager aliases — only defined where the tool exists
   if command -v dnf &>/dev/null; then
     alias dnfup=dnf_up
-    dnf_up() {
-      sudo dnf -y upgrade
-      sudo dnf -y distro-sync
-      sudo dnf -y autoremove
-      sudo rpmconf -a
-      sudo flatpak update -y
-      sudo systemctl poweroff
-    }
+    alias dnfup-shutdown=dnf_up_shutdown
   fi
 
   if command -v pacman &>/dev/null; then

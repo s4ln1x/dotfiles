@@ -44,10 +44,11 @@ set colorcolumn=80
 " Add Terminal color support
 set termguicolors
 
-" Colorscheme with fallback chain — last available one wins.
-" habamax (vim 9.0+) if present, desert as a safety net.
-silent! colorscheme habamax
+" Colorscheme with fallback chain — LAST successful :colorscheme wins, so
+" order is: safety-net first, preferred last. `desert` ships with every vim;
+" `habamax` shipped with vim 9.0 (2022) and is preferred when available.
 silent! colorscheme desert
+silent! colorscheme habamax
 
 " Theme background to dark or light
 set background=dark
@@ -88,5 +89,14 @@ if has("gui_running")
   set guifont=JetBrains\ Mono\ 10
 endif
 
-" Remove trailing whitespace only on current line when leaving insert mode
-autocmd InsertLeave * s/\s\+$//e
+" Remove trailing whitespace only on current line when leaving insert mode.
+" Save/restore the search register and cursor position so the substitution
+" doesn't pollute `/` history or jump the cursor around.
+function! s:StripTrailingOnCurrentLine() abort
+  let l:save_search = @/
+  let l:save_view = winsaveview()
+  silent! s/\s\+$//e
+  let @/ = l:save_search
+  call winrestview(l:save_view)
+endfunction
+autocmd InsertLeave * call <SID>StripTrailingOnCurrentLine()
