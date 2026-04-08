@@ -1,55 +1,64 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Install favorite packages
 sudo pacman -Ssy
-sudo pacman -S --noconfirm --needed grub \
-efibootmgr \
-xorg \
-xfce4 \
-xfce4-goodies \
-vlc \
-firefox \
-lightdm \
-lightdm-gtk-greeter \
-sudo \
-git \
-openssh \
-alsa-utils \
-pulseaudio \
-peek \
-pavucontrol \
-shellcheck \
-zsh \
-xsel \
-xclip \
-neovim \
-python-pip \
-nodejs \
-npm \
-fd \
-podman \
-virt-manager \
-libvirt \
-qemu \
-htop \
-go \
-meld \
-lynis \
-tree \
-curl \
-trash-cli \
-thermald \
-neofetch \
-unzip \
-rust \
-wget \
-reflector \
-bluez \
-blueman \
-bluez-utils \
-pulseaudio-bluetooth \
-gvfs \
-ntfs-3g
+sudo pacman -S --noconfirm --needed \
+    alsa-utils \
+    bat \
+    blueman \
+    bluez \
+    bluez-utils \
+    curl \
+    efibootmgr \
+    eza \
+    fastfetch \
+    fd \
+    firefox \
+    fzf \
+    git \
+    go \
+    grub \
+    gvfs \
+    htop \
+    libvirt \
+    lightdm \
+    lightdm-gtk-greeter \
+    lynis \
+    meld \
+    neovim \
+    ntfs-3g \
+    openssh \
+    pavucontrol \
+    peek \
+    podman \
+    pulseaudio \
+    pulseaudio-bluetooth \
+    python-pip \
+    qemu \
+    reflector \
+    ripgrep \
+    rust \
+    shellcheck \
+    sudo \
+    thermald \
+    tmux \
+    trash-cli \
+    tree \
+    unzip \
+    virt-manager \
+    vlc \
+    wget \
+    xclip \
+    xfce4 \
+    xfce4-goodies \
+    xorg \
+    xsel \
+    zoxide \
+    zsh \
+    zsh-autosuggestions \
+    zsh-syntax-highlighting \
+    zsh-theme-powerlevel10k
 
 # Enable bluetooth
 sudo systemctl start bluetooth

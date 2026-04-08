@@ -1,19 +1,13 @@
 "============================================================================="
-"[ Plugins Installation ]====================================================="
+"[ Plugins ]=================================================================="
 "============================================================================="
 
-" Initial part of vim-plug
-call plug#begin()
-
-" Plugin for the status line bar
-Plug 'vim-airline/vim-airline'
-
-" It shows which lines have been added, modified, or removed for git
-" repositories
-Plug 'airblade/vim-gitgutter'
-
-" Initialize plugin system
-call plug#end()
+" Plugins are installed into ~/.vim/pack/plugins/start/ and auto-loaded by
+" vim 8.0+. No plugin manager needed. See dot.sh for installation.
+"
+" Currently installed:
+"   - vim-airline/vim-airline    (status line)
+"   - airblade/vim-gitgutter     (git diff in the gutter)
 
 "============================================================================="
 "[ Vim airline ]=============================================================="
@@ -26,23 +20,23 @@ let g:airline_powerline_fonts = 1
 "[ Default Values ]==========================================================="
 "============================================================================="
 
-"Enable number column on the right"
+" Enable number column on the right
 set number
 
-"Set minimum number width for number column"
+" Set minimum number width for number column
 set numberwidth=5
 
-"Enable relative column number depending on the row the cursor is"
+" Enable relative column number depending on the row the cursor is
 set relativenumber
 
-"Enable cursor line
+" Enable cursor line
 set cursorline
 
-"Enable file syntax
+" Enable file syntax
 syntax enable
 
-"Enable spelling check for English
-set spell spelllang=en_us
+" Spelling check for prose filetypes only (not code)
+autocmd FileType markdown,text,gitcommit setlocal spell spelllang=en_us
 
 " Highlight column 80
 set colorcolumn=80
@@ -50,44 +44,46 @@ set colorcolumn=80
 " Add Terminal color support
 set termguicolors
 
-"Set color scheme
-colorscheme habamax
+" Colorscheme with fallback chain — last available one wins.
+" habamax (vim 9.0+) if present, desert as a safety net.
+silent! colorscheme habamax
+silent! colorscheme desert
 
-"Theme background to dark or light
+" Theme background to dark or light
 set background=dark
 
-"Horizontal split to open below
+" Horizontal split to open below
 set splitbelow
 
-"Vertical split to open to the right
+" Vertical split to open to the right
 set splitright
 
-"Highlight the search
+" Highlight the search
 set hlsearch
 
-"Auto reload file
+" Auto reload file
 set autoread
 
-"Make case insensitive searches
+" Make case insensitive searches
 set ignorecase
 
-"Set tabs to 4 spaces and always convert tabs to spaces
+" Set tabs to 4 spaces and always convert tabs to spaces
 set tabstop=4 shiftwidth=4 expandtab
 
-"See trailing spaces
+" See trailing spaces
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 
-"Set encoding
+" Set encoding
 set encoding=utf-8
 
-"Detect file type
+" Detect file type
 set filetype=on
 
-"Use system clipboard
+" Use system clipboard
 set clipboard^=unnamed,unnamedplus
 
-"Set up default font for gvim
+" Set up default font for gvim
 if has("gui_running")
   set guifont=JetBrains\ Mono\ 10
 endif

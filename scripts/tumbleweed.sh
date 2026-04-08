@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # Enabling multimedia
 sudo zypper addrepo -cfp 90 'https://ftp.gwdg.de/pub/linux/misc/packman/suse/openSUSE_Tumbleweed/' packman
@@ -8,28 +9,39 @@ sudo zypper install --from packman ffmpeg gstreamer-plugins-{good,bad,ugly,libav
 
 # Install favorite packages
 sudo zypper -n dist-upgrade
-sudo zypper -n install fakeroot \
-peek \
-ShellCheck \
-thermald \
-xsel \
-xclip \
-neofetch \
-neovim \
-python3-pip \
-nodejs15 \
-npm15 \
-fd \
-fuse-exfat \
-podman \
-virt-manager \
-libvirt \
-blueberry \
-tumbleweed-cli \
-htop \
-vgrep \
-gnome-pomodoro \
-go \
-lynis \
-meld \
-zsh
+sudo zypper -n install \
+    ShellCheck \
+    bat \
+    blueberry \
+    fakeroot \
+    fastfetch \
+    fd \
+    fuse-exfat \
+    fzf \
+    git \
+    gnome-pomodoro \
+    go \
+    htop \
+    libvirt \
+    lynis \
+    meld \
+    neovim \
+    peek \
+    podman \
+    python3-pip \
+    ripgrep \
+    thermald \
+    tmux \
+    tumbleweed-cli \
+    vgrep \
+    vim \
+    virt-manager \
+    xclip \
+    xsel \
+    zoxide \
+    zsh \
+    zsh-syntax-highlighting
+
+# Note: zsh-autosuggestions and powerlevel10k may not be in the main openSUSE
+# repos. Check with `zypper search` and install via OBS if needed, or the
+# .zshrc will skip them gracefully.

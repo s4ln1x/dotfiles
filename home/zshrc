@@ -1,32 +1,174 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
+# =============================================================================
+# Powerlevel10k instant prompt — must stay near the top
+# =============================================================================
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Path to your oh-my-zsh installation.
-export ZSH="${HOME}/.oh-my-zsh"
+# =============================================================================
+# OS detection
+# =============================================================================
+case "$(uname -s)" in
+  Darwin) OS='macos' ;;
+  Linux)  OS='linux' ;;
+  *)      OS='other' ;;
+esac
 
-# Choose a zsh theme
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# =============================================================================
+# PATH
+# =============================================================================
+if [[ "$OS" == "macos" ]] && [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 
-# Enabled plugins
-plugins=(git python pip gcloud zsh-autosuggestions zsh-syntax-highlighting)
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/go/bin:$HOME/bin:$PATH"
 
-# Load oh-myzsh
-source "${ZSH}"/oh-my-zsh.sh
+# =============================================================================
+# Environment
+# =============================================================================
+export EDITOR='vim'
+export VISUAL='vim'
 
-# Load alias for commands
-source "${HOME}"/.zshrc_aliases
+# =============================================================================
+# History
+# =============================================================================
+HISTFILE=~/.zsh_history
+HISTSIZE=1000000
+SAVEHIST=1000000
+setopt SHARE_HISTORY         # share history across sessions
+setopt HIST_IGNORE_ALL_DUPS  # drop older duplicate when a new one is added
+setopt HIST_REDUCE_BLANKS    # trim extra whitespace
+setopt HIST_VERIFY           # show !! expansions before running
+setopt EXTENDED_HISTORY      # timestamp each entry
 
-# Load environment variables
-source "${HOME}"/.zshrc_variables
+# =============================================================================
+# Completion
+# =============================================================================
+autoload -Uz compinit && compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'  # case-insensitive
+zstyle ':completion:*' menu select                          # arrow-key menu
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# =============================================================================
+# Plugins — find and source wherever the distro puts them
+# =============================================================================
+_find_plugin() {
+  local name="$1"
+  local candidates=(
+    # macOS (Homebrew Apple Silicon)
+    "/opt/homebrew/share/$name/$name.zsh"
+    "/opt/homebrew/share/$name/$name.plugin.zsh"
+    # macOS (Homebrew Intel)
+    "/usr/local/share/$name/$name.zsh"
+    "/usr/local/share/$name/$name.plugin.zsh"
+    # Fedora, RHEL, Oracle, Debian, Ubuntu, openSUSE
+    "/usr/share/$name/$name.zsh"
+    "/usr/share/$name/$name.plugin.zsh"
+    # Arch
+    "/usr/share/zsh/plugins/$name/$name.zsh"
+    "/usr/share/zsh/plugins/$name/$name.plugin.zsh"
+    # openSUSE fallback
+    "/usr/share/zsh/site-contrib/$name.zsh"
+  )
+  for candidate in $candidates; do
+    [[ -f "$candidate" ]] && { echo "$candidate"; return 0 }
+  done
+  return 1
+}
 
+_find_p10k() {
+  local candidates=(
+    "/opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme"
+    "/usr/local/share/powerlevel10k/powerlevel10k.zsh-theme"
+    "/usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme"
+    "$HOME/.local/share/powerlevel10k/powerlevel10k.zsh-theme"
+  )
+  for candidate in $candidates; do
+    [[ -f "$candidate" ]] && { echo "$candidate"; return 0 }
+  done
+  return 1
+}
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Theme first, then autosuggestions, then syntax-highlighting LAST
+_p10k_path=$(_find_p10k) && source "$_p10k_path"
+_plugin_path=$(_find_plugin "zsh-autosuggestions") && source "$_plugin_path"
+_plugin_path=$(_find_plugin "zsh-syntax-highlighting") && source "$_plugin_path"
+
+unset -f _find_plugin _find_p10k
+unset _p10k_path _plugin_path
+
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+# =============================================================================
+# Up/down arrow — prefix history search (zsh built-in, instant)
+# =============================================================================
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
+
+# =============================================================================
+# fzf
+# =============================================================================
+if command -v fzf &>/dev/null; then
+  export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+  if command -v fd &>/dev/null; then
+    export FZF_CTRL_T_COMMAND='fd --type f --hidden --exclude .git'
+    export FZF_ALT_C_COMMAND='fd --type d --hidden --exclude .git'
+  elif command -v fdfind &>/dev/null; then
+    # Debian/Ubuntu package the binary as fdfind, not fd
+    export FZF_CTRL_T_COMMAND='fdfind --type f --hidden --exclude .git'
+    export FZF_ALT_C_COMMAND='fdfind --type d --hidden --exclude .git'
+  fi
+  source <(fzf --zsh)
+fi
+
+# =============================================================================
+# Aliases — general
+# =============================================================================
+alias tree='tree -C'
+alias grep='grep --color=auto'
+alias ssh='ssh -Y'
+alias vim='vim -p'
+alias nvim='nvim -p'
+
+# Only alias rm to trash if trash-cli is actually installed
+command -v trash &>/dev/null && alias rm='trash'
+
+# =============================================================================
+# Aliases — OS-specific
+# =============================================================================
+if [[ "$OS" == "macos" ]]; then
+  alias ls='ls -G'
+  alias ll='ls -lahG'
+  alias la='ls -AG'
+  alias brewup='brew update && brew upgrade && brew cleanup'
+
+elif [[ "$OS" == "linux" ]]; then
+  alias ls='ls --color=auto'
+  alias ll='ls -lah --color=auto'
+  alias la='ls -A --color=auto'
+  alias htop='TERM=xterm-color htop'
+
+  # Package-manager aliases — only defined where the tool exists
+  if command -v dnf &>/dev/null; then
+    alias dnfup=dnf_up
+    dnf_up() {
+      sudo dnf -y upgrade
+      sudo dnf -y distro-sync
+      sudo dnf -y autoremove
+      sudo rpmconf -a
+      sudo flatpak update -y
+      sudo systemctl poweroff
+    }
+  fi
+
+  if command -v pacman &>/dev/null; then
+    alias pacman-autoremove='pacman -Rsn $(pacman -Qdtq)'
+  fi
+fi
+
+# =============================================================================
+# Work overrides — sourced LAST so it can override anything above
+# =============================================================================
+[[ -f "$HOME/.zshrc_work" ]] && source "$HOME/.zshrc_work"
