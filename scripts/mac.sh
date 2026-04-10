@@ -8,20 +8,14 @@ fi
 
 # CLI tools
 brew install \
-    bat \
-    eza \
     fastfetch \
     fd \
     fzf \
-    git \
-    htop \
-    podman \
     powerlevel10k \
     ripgrep \
     tmux \
     tree \
     vim \
-    zoxide \
     zsh-autosuggestions \
     zsh-syntax-highlighting
 

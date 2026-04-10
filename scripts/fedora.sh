@@ -17,55 +17,27 @@ sudo dnf install -y \
     @development-tools \
     @virtualization \
     ShellCheck \
-    bat \
-    cargo \
-    cockpit \
-    cockpit-machines \
-    cockpit-podman \
-    cockpit-session-recording \
-    crontabs \
-    dconf-editor \
-    eza \
     fastfetch \
     fd-find \
     fedora-packager \
     fedora-review \
-    fira-code-fonts \
-    firefox \
     fzf \
     gcc-c++ \
     gimp \
     git \
-    gnome-extensions-app \
-    gnome-shell-extension-appindicator \
-    gnome-shell-extension-pomodoro \
-    gnome-tweaks \
-    golang \
     htop \
-    inotify-tools \
     jetbrains-mono-fonts-all \
-    libvirt \
-    lynis \
     meld \
-    openssh \
-    peek \
     podman \
     powerline-fonts \
     ripgrep \
     rpmconf \
-    rust \
+    strace \
     telegram-desktop \
     tmux \
     trash-cli \
     util-linux-user \
-    vgrep \
     vim \
-    virt-manager \
-    wimlib-utils \
-    wordnet \
-    xclip \
-    xsel \
-    zoxide \
     zsh \
     zsh-autosuggestions \
     zsh-syntax-highlighting
@@ -95,13 +67,6 @@ if [[ "$ARCH" == "x86_64" ]]; then
       thermald
 
 elif [[ "$ARCH" == "aarch64" ]]; then
-  sudo dnf install -y \
-      @x86-emulation \
-      fex-emu \
-      fex-emu-rootfs-fedora \
-      muvm \
-      strace
-
   # Enable video on aarch64 (x86_64 gets this from @Multimedia)
   sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing
   sudo dnf install -y \

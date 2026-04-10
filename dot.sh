@@ -7,7 +7,7 @@ set -euo pipefail
 
 EMAIL="${1?ERROR: Please provide a valid email}"
 DISTRO_INSTALLER="${2?ERROR: Please provide desired distro installer}"
-USERNAME="${3-Salvador Gudino}"
+DEVELOPER_NAME="${3?ERROR: Please provide a developer name}"
 DOTFILES_PATH=$(dirname "$(realpath "${BASH_SOURCE[0]-$0}")")
 
 #=============================================================================#
@@ -30,7 +30,7 @@ fi
 # Back up existing gitconfig if present (don't error on fresh install)
 [[ -f "${HOME}/.gitconfig" ]] && mv "${HOME}/.gitconfig" "${HOME}/.gitconfig.bk"
 
-git config --global user.name "${USERNAME}"
+git config --global user.name "${DEVELOPER_NAME}"
 git config --global user.email "${EMAIL}"
 git config --global commit.template "${HOME}/.gitmessage"
 git config --global core.editor "vim"

@@ -10,13 +10,10 @@ sudo dnf config-manager --enable "ol$(rpm -E %rhel)_codeready_builder"
 
 # Install desired applications
 sudo dnf install -y \
-    bat \
     fastfetch \
     fd-find \
     fzf \
     git \
-    golang \
-    google-noto-sans-fonts \
     htop \
     podman \
     python3-pip \
@@ -24,7 +21,6 @@ sudo dnf install -y \
     tmux \
     util-linux-user \
     vim-enhanced \
-    zoxide \
     zsh \
     zsh-autosuggestions \
     zsh-syntax-highlighting

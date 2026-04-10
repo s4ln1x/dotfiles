@@ -15,34 +15,20 @@ sudo dnf group upgrade -y sound-and-video
 # Install desired applications
 sudo dnf install -y \
     @Multimedia \
-    bat \
-    cockpit \
-    cockpit-machines \
-    cockpit-podman \
-    cockpit-session-recording \
-    dconf-editor \
     fastfetch \
     fd-find \
     fzf \
     git \
-    gnome-tweaks \
-    golang \
-    google-noto-sans-fonts \
     htop \
-    libvirt \
     podman \
     python3-pip \
     ripgrep \
     rpmconf \
     simple-scan \
-    steam \
-    thermald \
     tmux \
     util-linux-user \
     vim-enhanced \
-    virt-manager \
     vlc \
-    zoxide \
     zsh \
     zsh-autosuggestions \
     zsh-syntax-highlighting

@@ -25,7 +25,7 @@ useful and ignore the rest.
 - `<email>` — used for `git config --global user.email`
 - `<distro>` — the basename of an installer in `scripts/` (e.g. `fedora`,
   `arch`, `mac`, `ubuntu`)
-- `[full name]` — optional, defaults to `Salvador Gudino`
+- `[full name]
 
 ### Examples
 
