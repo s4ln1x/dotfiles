@@ -27,6 +27,7 @@ sudo dnf install -y \
     git \
     htop \
     jetbrains-mono-fonts-all \
+    nodejs24 \
     meld \
     podman \
     powerline-fonts \
@@ -35,7 +36,6 @@ sudo dnf install -y \
     strace \
     telegram-desktop \
     tmux \
-    trash-cli \
     util-linux-user \
     vim \
     zsh \

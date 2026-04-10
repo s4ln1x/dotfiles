@@ -11,10 +11,9 @@ useful and ignore the rest.
   plugins, and switches the default shell to zsh.
 - **`home/`** — dotfiles that get symlinked into `$HOME` (prefixed with `.`).
   Contains `zshrc`, `vimrc`, `tmux.conf`, `gitignore`, `gitmessage`.
-- **`scripts/`** — one installer per distro (`arch.sh`, `debian.sh`,
-  `fedora.sh`, `leap.sh`, `mac.sh`, `oracle.sh`, `redhat.sh`,
-  `tumbleweed.sh`, `ubuntu.sh`). Each one installs the packages I want on
-  that platform.
+- **`scripts/`** — one installer per distro (`fedora.sh`, `mac.sh`,
+  `oracle.sh`, `redhat.sh`). Archived installers for other distros live
+  in `scripts/archived/`.
 
 ## Usage
 
@@ -24,8 +23,8 @@ useful and ignore the rest.
 
 - `<email>` — used for `git config --global user.email`
 - `<distro>` — the basename of an installer in `scripts/` (e.g. `fedora`,
-  `arch`, `mac`, `ubuntu`)
-- `[full name]
+  `mac`, `oracle`, `redhat`)
+- `[full name]` — full name for `git config --global user.name`
 
 ### Examples
 

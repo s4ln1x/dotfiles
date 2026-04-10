@@ -7,6 +7,9 @@ sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-"$
 sudo dnf install -y https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-"$(rpm -E %rhel)".noarch.rpm
 sudo dnf install -y https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-"$(rpm -E %rhel)".noarch.rpm
 
+# Node.js 20 LTS — the newest stream verified in RHEL 9 AppStream
+sudo dnf module enable -y nodejs:20
+
 # Update system
 sudo dnf group upgrade -y core
 sudo dnf group upgrade -y multimedia --setop="install_weak_deps=False"
@@ -20,6 +23,7 @@ sudo dnf install -y \
     fzf \
     git \
     htop \
+    nodejs \
     podman \
     python3-pip \
     ripgrep \

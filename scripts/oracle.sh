@@ -8,6 +8,9 @@ sudo dnf update -y
 sudo dnf install -y "oracle-epel-release-el$(rpm -E %rhel)"
 sudo dnf config-manager --enable "ol$(rpm -E %rhel)_codeready_builder"
 
+# Node.js 20 LTS — the newest stream verified in OL9 AppStream
+sudo dnf module enable -y nodejs:20
+
 # Install desired applications
 sudo dnf install -y \
     fastfetch \
@@ -15,6 +18,7 @@ sudo dnf install -y \
     fzf \
     git \
     htop \
+    nodejs \
     podman \
     python3-pip \
     ripgrep \

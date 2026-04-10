@@ -45,7 +45,12 @@ setopt EXTENDED_HISTORY      # timestamp each entry
 # =============================================================================
 # Completion
 # =============================================================================
-autoload -Uz compinit && compinit
+autoload -Uz compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'  # case-insensitive
 zstyle ':completion:*' menu select                          # arrow-key menu
 
@@ -176,9 +181,6 @@ alias ssh='ssh -Y'
 alias vim='vim -p'
 alias nvim='nvim -p'
 
-# Only alias rm to trash if trash-cli is actually installed
-command -v trash &>/dev/null && alias rm='trash'
-
 # =============================================================================
 # Aliases — OS-specific
 # =============================================================================
@@ -201,7 +203,7 @@ elif [[ "$OS" == "linux" ]]; then
   fi
 
   if command -v pacman &>/dev/null; then
-    alias pacman-autoremove='pacman -Rsn $(pacman -Qdtq)'
+    alias pacman-autoremove='pacman -Qdtq | xargs -r sudo pacman -Rsn'
   fi
 fi
 

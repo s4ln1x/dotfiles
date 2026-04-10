@@ -67,6 +67,7 @@ set autoread
 
 " Make case insensitive when all are lowercase and
 " case sensitive with one upper letter
+set ignorecase
 set smartcase
 
 " Set tabs to 4 spaces and always convert tabs to spaces

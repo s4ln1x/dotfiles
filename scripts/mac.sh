@@ -11,6 +11,7 @@ brew install \
     fastfetch \
     fd \
     fzf \
+    node@24 \
     powerlevel10k \
     ripgrep \
     tmux \

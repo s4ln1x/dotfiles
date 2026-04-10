@@ -1,14 +1,49 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+DOTFILES_PATH=$(dirname "$(realpath "${BASH_SOURCE[0]-$0}")")
+
+#=============================================================================#
+#[ Help ]=====================================================================#
+#=============================================================================#
+
+_usage() {
+  cat <<'EOF'
+Bootstrap a fresh machine with dotfiles, packages, and shell configuration.
+
+Usage:
+  ./dot.sh <email> <distro> <full name>
+  ./dot.sh -h | --help
+
+Examples:
+  ./dot.sh me@example.com fedora "Jane Doe"
+  ./dot.sh me@example.com mac "Jane Doe"
+  ./dot.sh me@example.com oracle "Jane Doe"
+  DOTFILES_DISABLE_SLEEP=1 ./dot.sh me@example.com fedora "Jane Doe"
+
+Arguments:
+  <email>       email for git config --global user.email
+  <distro>      basename of an installer in scripts/ (fedora, mac, oracle, redhat)
+  <full name>   full name for git config --global user.name
+
+Environment:
+  DOTFILES_DISABLE_SLEEP=1   force-mask sleep/suspend/hibernate targets on Linux
+                             even when the chassis looks like a laptop
+EOF
+}
+
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  _usage
+  exit 0
+fi
+
 #=============================================================================#
 #[ Main Variables ]===========================================================#
 #=============================================================================#
 
-EMAIL="${1?ERROR: Please provide a valid email}"
-DISTRO_INSTALLER="${2?ERROR: Please provide desired distro installer}"
-DEVELOPER_NAME="${3?ERROR: Please provide a developer name}"
-DOTFILES_PATH=$(dirname "$(realpath "${BASH_SOURCE[0]-$0}")")
+EMAIL="${1?ERROR: Please provide a valid email. Run with --help for usage}"
+DISTRO_INSTALLER="${2?ERROR: Please provide desired distro installer. Run with --help for usage}"
+DEVELOPER_NAME="${3?ERROR: Please provide a developer name. Run with --help for usage}"
 
 #=============================================================================#
 #[ Install Packages ]=========================================================#
@@ -19,7 +54,9 @@ if [[ -f "${INSTALLER}" ]]; then
   "${INSTALLER}"
 else
   echo "No '${DISTRO_INSTALLER}' installer was found. Available installers:"
-  ls -1 "${DOTFILES_PATH}/scripts"
+  for _script in "${DOTFILES_PATH}"/scripts/*.sh; do
+    [[ -f "${_script}" ]] && basename "${_script}" .sh
+  done
   exit 1
 fi
 
@@ -27,8 +64,11 @@ fi
 #[ Configure git ]============================================================#
 #=============================================================================#
 
-# Back up existing gitconfig if present (don't error on fresh install)
-[[ -f "${HOME}/.gitconfig" ]] && mv "${HOME}/.gitconfig" "${HOME}/.gitconfig.bk"
+# Back up existing gitconfig only on first run. If a timestamped backup already
+# exists we've run before — skip the backup to stay idempotent.
+if [[ -f "${HOME}/.gitconfig" ]] && ! ls "${HOME}"/.gitconfig.bk.* &>/dev/null; then
+  mv "${HOME}/.gitconfig" "${HOME}/.gitconfig.bk.$(date +%Y%m%d%H%M%S)"
+fi
 
 git config --global user.name "${DEVELOPER_NAME}"
 git config --global user.email "${EMAIL}"
@@ -39,7 +79,6 @@ git config --global core.excludesfile "${HOME}/.gitignore"
 git config --global init.defaultBranch main
 git config --global alias.poh "push origin HEAD"
 git config --global alias.l "!clear && git log --color --graph --pretty=format:'%Cred%H%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -25"
-git config --global alias.full '!git fetch && git reset --hard @{u}'
 
 #=============================================================================#
 #[ Symlink Configuration Files ]==============================================#
@@ -135,11 +174,16 @@ fi
 
 if command -v zsh &>/dev/null; then
   ZSH_PATH="$(command -v zsh)"
+
   # Ensure zsh is listed in /etc/shells before chsh (required on some distros)
   if ! grep -qx "${ZSH_PATH}" /etc/shells 2>/dev/null; then
     echo "${ZSH_PATH}" | sudo tee -a /etc/shells >/dev/null
   fi
-  # `chsh -s <shell>` (no username) changes the *current* user's shell without
-  # needing root. Passing a username requires root on several distros.
-  chsh -s "${ZSH_PATH}"
+
+  # Skip chsh if the shell is already set — avoids an unnecessary password
+  # prompt on systems where chsh requires it.
+  CURRENT_SHELL=$(getent passwd "${USER}" | cut -d: -f7)
+  if [[ "${CURRENT_SHELL}" != "${ZSH_PATH}" ]]; then
+    chsh -s "${ZSH_PATH}"
+  fi
 fi
