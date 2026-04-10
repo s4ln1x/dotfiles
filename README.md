@@ -32,7 +32,7 @@ useful and ignore the rest.
 ```sh
 ./dot.sh me@example.com fedora
 ./dot.sh me@example.com mac "Jane Doe"
-./dot.sh me@example.com arch
+./dot.sh me@example.com oracle
 ```
 
 ### Environment flags

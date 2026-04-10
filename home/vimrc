@@ -65,8 +65,9 @@ set hlsearch
 " Auto reload file
 set autoread
 
-" Make case insensitive searches
-set ignorecase
+" Make case insensitive when all are lowercase and
+" case sensitive with one upper letter
+set smartcase
 
 " Set tabs to 4 spaces and always convert tabs to spaces
 set tabstop=4 shiftwidth=4 expandtab
