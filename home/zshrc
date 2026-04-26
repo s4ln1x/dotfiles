@@ -28,6 +28,7 @@ export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/go/bin:$HOME/bin:$PATH"
 # =============================================================================
 export EDITOR='vim'
 export VISUAL='vim'
+export PATH="$HOME/.npm-global/bin:$PATH"
 
 # =============================================================================
 # History
@@ -200,6 +201,8 @@ elif [[ "$OS" == "linux" ]]; then
   if command -v dnf &>/dev/null; then
     alias dnfup=dnf_up
     alias dnfup-shutdown=dnf_up_shutdown
+    command -v node-24 &>/dev/null && alias node=node-24
+    command -v npm-24 &>/dev/null && alias npm=npm-24
   fi
 
   if command -v pacman &>/dev/null; then
