@@ -27,7 +27,7 @@ sudo dnf install -y \
     git \
     htop \
     jetbrains-mono-fonts-all \
-    nodejs24 \
+    nodejs \
     meld \
     podman \
     powerline-fonts \
