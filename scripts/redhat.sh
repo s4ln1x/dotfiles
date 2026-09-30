@@ -36,8 +36,3 @@ sudo dnf install -y \
     zsh \
     zsh-autosuggestions \
     zsh-syntax-highlighting
-
-# Note: powerlevel10k is not packaged for RHEL. The .zshrc will skip it
-# gracefully. If you want the theme, clone it manually:
-#   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
-#     "${HOME}/.local/share/powerlevel10k"

@@ -61,8 +61,7 @@ sudo pacman -S --noconfirm --needed \
     zoxide \
     zsh \
     zsh-autosuggestions \
-    zsh-syntax-highlighting \
-    zsh-theme-powerlevel10k
+    zsh-syntax-highlighting
 
 # Enable bluetooth
 sudo systemctl start bluetooth

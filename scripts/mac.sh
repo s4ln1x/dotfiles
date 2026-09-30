@@ -12,7 +12,6 @@ brew install \
     fd \
     fzf \
     node@24 \
-    powerlevel10k \
     ripgrep \
     tmux \
     tree \

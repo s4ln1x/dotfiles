@@ -41,6 +41,4 @@ sudo zypper -n install \
     zsh \
     zsh-syntax-highlighting
 
-# Note: zsh-autosuggestions and powerlevel10k may not be in the main openSUSE
-# repos. Check with `zypper search` and install via OBS if needed, or the
-# .zshrc will skip them gracefully.
+# zsh-autosuggestions is optional; install it if your distro repos provide it.

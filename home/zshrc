@@ -1,22 +1,16 @@
 # =============================================================================
-# Powerlevel10k instant prompt — must stay near the top
-# =============================================================================
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-# =============================================================================
 # OS detection
 # =============================================================================
-case "$(uname -s)" in
-  Darwin) OS='macos' ;;
-  Linux)  OS='linux' ;;
+case "$OSTYPE" in
+  darwin*) OS='macos' ;;
+  linux*)  OS='linux' ;;
   *)      OS='other' ;;
 esac
 
 # =============================================================================
 # PATH
 # =============================================================================
+typeset -U PATH path
 if [[ "$OS" == "macos" ]] && [[ -x /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
@@ -34,11 +28,12 @@ export PATH="$HOME/.npm-global/bin:$PATH"
 # History
 # =============================================================================
 HISTFILE=~/.zsh_history
-HISTSIZE=1000000
-SAVEHIST=1000000
+HISTSIZE=120000
+SAVEHIST=100000
 setopt SHARE_HISTORY         # share history across sessions
 setopt HIST_IGNORE_DUPS      # drop consecutive duplicates only (safer with SHARE_HISTORY)
 setopt HIST_EXPIRE_DUPS_FIRST # when trimming, drop dupes before uniques
+setopt HIST_FIND_NO_DUPS      # skip repeated commands when searching history
 setopt HIST_REDUCE_BLANKS    # trim extra whitespace
 setopt HIST_VERIFY           # show !! expansions before running
 setopt EXTENDED_HISTORY      # timestamp each entry
@@ -47,67 +42,84 @@ setopt EXTENDED_HISTORY      # timestamp each entry
 # Completion
 # =============================================================================
 autoload -Uz compinit
-if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
-  compinit
-else
-  compinit -C
-fi
+compinit
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'  # case-insensitive
 zstyle ':completion:*' menu select                          # arrow-key menu
 
 # =============================================================================
-# Plugins — find and source wherever the distro puts them
+# Prompt — zsh's bundled vcs_info plus the installed Git command
 # =============================================================================
-_find_plugin() {
-  local name="$1"
-  local candidates=(
-    # macOS (Homebrew Apple Silicon)
-    "/opt/homebrew/share/$name/$name.zsh"
-    "/opt/homebrew/share/$name/$name.plugin.zsh"
-    # macOS (Homebrew Intel)
-    "/usr/local/share/$name/$name.zsh"
-    "/usr/local/share/$name/$name.plugin.zsh"
-    # Fedora, RHEL, Oracle, Debian, Ubuntu, openSUSE
-    "/usr/share/$name/$name.zsh"
-    "/usr/share/$name/$name.plugin.zsh"
-    # Arch
-    "/usr/share/zsh/plugins/$name/$name.zsh"
-    "/usr/share/zsh/plugins/$name/$name.plugin.zsh"
-    # openSUSE fallback
-    "/usr/share/zsh/site-contrib/$name.zsh"
-  )
-  for candidate in $candidates; do
-    [[ -f "$candidate" ]] && { echo "$candidate"; return 0 }
+autoload -Uz vcs_info add-zsh-hook
+zstyle ':vcs_info:*' enable git
+# The hook counts all states in one status scan instead of separate diff calls.
+zstyle ':vcs_info:git:*' check-for-changes false
+zstyle ':vcs_info:git:*' formats ' %F{76}%b%f%c%u'
+zstyle ':vcs_info:git:*' actionformats ' %F{76}%b%f %F{196}(%a)%f%c%u'
+zstyle ':vcs_info:git*+set-message:*' hooks git-prompt
+
+function +vi-git-prompt() {
+  # Branch names are data, including any literal prompt-format characters.
+  hook_com[branch]=${hook_com[branch]//\%/%%}
+  local git_output entry
+  local -i staged=0 modified=0 untracked=0 conflicted=0 skip_original=0
+  git_output=$(command git --no-optional-locks -C "$hook_com[base]" status \
+    --porcelain=v2 -z --untracked-files=all --ignore-submodules=dirty \
+    2>/dev/null) || return 0
+
+  # NUL-separated records preserve spaces/newlines in filenames. Renames and
+  # copies have an extra original-path record that must not be counted again.
+  for entry in "${(@0)git_output}"; do
+    if (( skip_original )); then
+      skip_original=0
+      continue
+    fi
+    case "$entry" in
+      '1 '*|'2 '*)
+        [[ $entry[3] != . ]] && (( ++staged ))
+        [[ $entry[4] != . ]] && (( ++modified ))
+        [[ $entry[1] == 2 ]] && skip_original=1
+        ;;
+      '? '*) (( ++untracked )) ;;
+      'u '*) (( ++conflicted )) ;;
+    esac
   done
-  return 1
+  (( staged )) && hook_com[staged]=" %F{178}+${staged}%f"
+  (( modified )) && hook_com[unstaged]=" %F{178}!${modified}%f"
+  (( untracked )) && hook_com[unstaged]+=" %F{39}?${untracked}%f"
+  (( conflicted )) && hook_com[unstaged]+=" %F{196}~${conflicted}%f"
+  return 0
 }
 
-_find_p10k() {
-  local candidates=(
-    "/opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme"
-    "/usr/local/share/powerlevel10k/powerlevel10k.zsh-theme"
-    "/usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme"
-    "$HOME/.local/share/powerlevel10k/powerlevel10k.zsh-theme"
-  )
-  for candidate in $candidates; do
-    [[ -f "$candidate" ]] && { echo "$candidate"; return 0 }
-  done
-  return 1
+_native_prompt_precmd() {
+  local command_status=$?
+  vcs_info
+  PROMPT="%F{31}%~%f${vcs_info_msg_0_}"$'\n'
+  if (( command_status == 0 )); then
+    PROMPT+='%F{76}❯%f '
+  else
+    PROMPT+='%F{196}❯%f '
+  fi
 }
-
-# Theme first, then autosuggestions, then syntax-highlighting LAST
-_p10k_path=$(_find_p10k) && source "$_p10k_path"
-_plugin_path=$(_find_plugin "zsh-autosuggestions") && source "$_plugin_path"
-_plugin_path=$(_find_plugin "zsh-syntax-highlighting") && source "$_plugin_path"
-
-unset -f _find_plugin _find_p10k
-unset _p10k_path _plugin_path
-
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+setopt PROMPT_PERCENT
+unsetopt PROMPT_SUBST
+add-zsh-hook precmd _native_prompt_precmd
+RPROMPT='%F{66}%D{%H:%M:%S}%f'
 
 # =============================================================================
+# Keyboard bindings
+# =============================================================================
+# Use non-modal command-line editing even when EDITOR/VISUAL is vim.
+bindkey -e
+
+# Home/End sequences used by tmux and common terminals.
+bindkey '\e[1~' beginning-of-line
+bindkey '\e[4~' end-of-line
+bindkey '\e[H' beginning-of-line
+bindkey '\e[F' end-of-line
+bindkey '\eOH' beginning-of-line
+bindkey '\eOF' end-of-line
+
 # Up/down arrow — prefix history search (zsh built-in, instant)
-# =============================================================================
 autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
@@ -128,12 +140,9 @@ if command -v fzf &>/dev/null; then
     export FZF_ALT_C_COMMAND='fdfind --type d --hidden --exclude .git'
   fi
 
-  # `fzf --zsh` needs fzf 0.48+ (Feb 2024). Older distros (Debian stable,
-  # RHEL 9, Oracle Linux, Leap) ship older fzf — fall back to sourcing the
-  # key-bindings and completion files directly from whatever path the distro
-  # uses.
-  if fzf --zsh &>/dev/null; then
-    source <(fzf --zsh)
+  # fzf 0.48+ generates its integration script; older packages provide files.
+  if _fzf_init=$(fzf --zsh 2>/dev/null); then
+    eval "$_fzf_init"
   else
     for _fzf_file in \
       /usr/share/fzf/shell/key-bindings.zsh \
@@ -153,6 +162,7 @@ if command -v fzf &>/dev/null; then
     done
     unset _fzf_file
   fi
+  unset _fzf_init
 fi
 
 # =============================================================================
@@ -162,11 +172,16 @@ fi
 # Upgrade a Fedora/RHEL system fully. Does NOT power off — add `&& sudo
 # systemctl poweroff` at the call site if you want that, or run `dnfup-shutdown`.
 dnf_up() {
-  sudo dnf -y upgrade
-  sudo dnf -y distro-sync
-  sudo dnf -y autoremove
-  command -v rpmconf &>/dev/null && sudo rpmconf -a
-  command -v flatpak &>/dev/null && flatpak update -y
+  sudo dnf -y upgrade || return
+  sudo dnf -y distro-sync || return
+  sudo dnf -y autoremove || return
+  if command -v rpmconf &>/dev/null; then
+    sudo rpmconf -a || return
+  fi
+  if command -v flatpak &>/dev/null; then
+    flatpak update -y || return
+  fi
+  return 0
 }
 
 dnf_up_shutdown() {
@@ -178,7 +193,7 @@ dnf_up_shutdown() {
 # =============================================================================
 alias tree='tree -C'
 alias grep='grep --color=auto'
-alias ssh='ssh -Y'
+alias sshx='ssh -Y'
 alias vim='vim -p'
 alias nvim='nvim -p'
 
@@ -195,7 +210,6 @@ elif [[ "$OS" == "linux" ]]; then
   alias ls='ls --color=auto'
   alias ll='ls -lah --color=auto'
   alias la='ls -A --color=auto'
-  alias htop='TERM=xterm-color htop'
 
   # Package-manager aliases — only defined where the tool exists
   if command -v dnf &>/dev/null; then
@@ -209,6 +223,34 @@ elif [[ "$OS" == "linux" ]]; then
 fi
 
 # =============================================================================
-# Work overrides — sourced LAST so it can override anything above
+# Work overrides — after defaults, before the final widget plugins
 # =============================================================================
 [[ -f "$HOME/.zshrc_work" ]] && source "$HOME/.zshrc_work"
+
+# =============================================================================
+# Optional packaged plugins — syntax highlighting must follow every widget
+# =============================================================================
+_find_plugin() {
+  local name="$1" candidate
+  local candidates=(
+    "/opt/homebrew/share/$name/$name.zsh"
+    "/opt/homebrew/share/$name/$name.plugin.zsh"
+    "/usr/local/share/$name/$name.zsh"
+    "/usr/local/share/$name/$name.plugin.zsh"
+    "/usr/share/$name/$name.zsh"
+    "/usr/share/$name/$name.plugin.zsh"
+    "/usr/share/zsh/plugins/$name/$name.zsh"
+    "/usr/share/zsh/plugins/$name/$name.plugin.zsh"
+    "/usr/share/zsh/site-contrib/$name.zsh"
+  )
+  for candidate in $candidates; do
+    [[ -r "$candidate" ]] && { print -r -- "$candidate"; return 0 }
+  done
+  return 1
+}
+
+for _plugin_name in zsh-autosuggestions zsh-syntax-highlighting; do
+  _plugin_path=$(_find_plugin "$_plugin_name") && source "$_plugin_path"
+done
+unset -f _find_plugin
+unset _plugin_name _plugin_path

@@ -42,12 +42,23 @@ useful and ignore the rest.
 
 ## After installation
 
-- A new zsh session will start using the powerlevel10k theme if it's
-  available on your distro; otherwise the prompt falls back gracefully.
+- Zsh uses a native two-line prompt: directory and Git branch above a green
+  or red `❯` for the previous command's success or failure. Git markers are
+  `+N` (staged), `!N` (modified), `?N` (untracked), and `~N` (conflicted),
+  where N counts files in that state. A partially staged file counts in both
+  staged and modified; conflicts have their own count. Merge/rebase actions
+  also appear. The clock is on the right. This uses zsh's bundled `vcs_info`
+  and one Git status scan for the counts, with no downloaded theme or daemon.
+  Exact untracked counts include files inside untracked directories; large
+  unignored build/dependency trees can therefore slow prompt refreshes.
+- `sshx` explicitly enables trusted X11 forwarding; ordinary `ssh` keeps
+  its normal behavior. `dnfup-shutdown` powers off only after every available
+  update step succeeds.
 - Vim plugins (`vim-airline`, `vim-gitgutter`) are auto-loaded from
   `~/.vim/pack/plugins/start/` — no plugin manager needed.
-- Work-specific overrides can live in `~/.zshrc_work`; it's sourced last
-  so anything it defines wins.
+- Work-specific overrides can live in `~/.zshrc_work`; they load after the
+  defaults and before autosuggestions and syntax highlighting, so those
+  plugins can see any custom widgets.
 
 ## License
 
